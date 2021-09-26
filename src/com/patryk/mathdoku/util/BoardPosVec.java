@@ -1,17 +1,19 @@
-package com.patryk.mathdoku.global;
-
-import com.patryk.mathdoku.GameGridView;
-import com.patryk.mathdoku.Util;
+package com.patryk.mathdoku.util;
 
 public class BoardPosVec {
     //private static GameContext gameContext = GameContext.getInstance();
     //public static int width = GameContext.getBoardWidth();
     public static int boardWidth;
+    public static int pixelWidth;
+
 
     public static void setBoardWidth(int boardWidth) {
         BoardPosVec.boardWidth = boardWidth;
     }
 
+    public static void setPixelWidth(int pixelWidth) {
+        BoardPosVec.pixelWidth = pixelWidth;
+    }
     /*public static int pixelWidth;
 
     public static void setPixelWidth(int pixelWidth) {
@@ -46,7 +48,6 @@ public class BoardPosVec {
         return (r == boardWidth - 1 && c == boardWidth - 1);
     }
 
-    //TODO test
     public boolean clampToArea() {
         //---
         int oldRow = r, oldCol = c;
@@ -68,13 +69,12 @@ public class BoardPosVec {
     }
 
     public BoardPosVec toPixelSpace() {
-        return new BoardPosVec(this.r * GameGridView.getSquarePixelWidth(), this.c * GameGridView.getSquarePixelWidth());
+        return new BoardPosVec(Util.boardToPixel(this.r, boardWidth, pixelWidth), Util.boardToPixel(this.c, boardWidth, pixelWidth));
     }
 
     public BoardPosVec fromPixelToBoardSpace() {
-        int pixelWidth = GameGridView.getSquarePixelWidth();
 
-        return new BoardPosVec(Math.floorDiv(r, pixelWidth), Math.floorDiv(c, pixelWidth));
+        return new BoardPosVec(Util.pixelToBoard(this.r, boardWidth, pixelWidth), Util.pixelToBoard(this.c, boardWidth, pixelWidth));
     }
 
 

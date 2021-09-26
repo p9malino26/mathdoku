@@ -1,4 +1,4 @@
-package com.patryk.mathdoku;
+package com.patryk.mathdoku.actions;
 
 public interface ActionRecorder<T> {
     void record(T action);

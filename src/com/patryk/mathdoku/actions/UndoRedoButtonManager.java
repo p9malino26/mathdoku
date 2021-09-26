@@ -1,6 +1,6 @@
-package com.patryk.mathdoku;
+package com.patryk.mathdoku.actions;
 
-import com.patryk.mathdoku.actions.Action;
+import com.patryk.mathdoku.GameContext;
 import javafx.scene.control.Button;
 
 public class UndoRedoButtonManager {
@@ -13,13 +13,19 @@ public class UndoRedoButtonManager {
     Button redoButton;
     StackActionRecorder<Action> actionRecorder;
 
-    public UndoRedoButtonManager(Button undoButton, Button redoButton, StackActionRecorder<Action> actionRecorder) {
+
+    public UndoRedoButtonManager(Button undoButton, Button redoButton) {
         this.undoButton = undoButton;
         this.redoButton = redoButton;
-        this.actionRecorder = actionRecorder;
         undoButton.setDisable(true);
+        redoButton.setDisable(true);
         instance = this;
+    }
 
+    public void setGameContext(GameContext gameContext) {
+        this.actionRecorder = gameContext.getActionRecorder();
+        undoButton.setDisable(true);
+        redoButton.setDisable(true);
     }
 
     public void onUndoButtonPressed() {

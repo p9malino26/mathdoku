@@ -1,4 +1,4 @@
-package com.patryk.mathdoku;
+package com.patryk.mathdoku.actions;
 
 public class StackActionRecorder<T> implements ActionRecorder<T>{
 

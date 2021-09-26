@@ -1,21 +1,49 @@
-package com.patryk.mathdoku.drawers;
+package com.patryk.mathdoku.gui.drawers;
 
-import com.patryk.mathdoku.GameGridView;
-import com.patryk.mathdoku.Util;
-import com.patryk.mathdoku.global.BoardPosVec;
+import com.patryk.mathdoku.gui.GameGridView;
+import com.patryk.mathdoku.util.Direction;
+import com.patryk.mathdoku.util.BoardPosVec;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 public class Drawer {
+    protected static GameGridView.FontSize fontSize;
+
+    protected static int pixelWidth;
+    protected static int boardWidth;
+    protected static int squarePixelWidth;
+
+    public static void setPixelWidth(int pixelWidth) {
+        Drawer.pixelWidth = pixelWidth;
+
+    }
+
+    public static void setBoardWidth(int boardWidth) {
+        Drawer.boardWidth = boardWidth;
+        Drawer.squarePixelWidth = pixelWidth / boardWidth;
+    }
+
+
     protected GraphicsContext gc;
+    private Canvas canvas;
 
 
     //protected static GameContext gameContext = GameContext.getInstance();
 
 
 
-    protected Drawer(GraphicsContext gc) {
-        this.gc = gc;
+    protected Drawer() {
+        assert (pixelWidth != 0);
+        this.canvas = new Canvas(pixelWidth, pixelWidth);
+        this.gc = canvas.getGraphicsContext2D();
+    }
+
+    public static void setFontSize(GameGridView.FontSize fontSize) {
+        Drawer.fontSize = fontSize;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 
     public void clearCanvas() {
@@ -24,26 +52,26 @@ public class Drawer {
         gc.clearRect(0, 0, pixelWidth, pixelWidth);
     }
 
-    protected void drawLineFromSquare (BoardPosVec pos, Util.Direction dir) {
-        Util.Direction lineDir = Util.Direction.NORTH;
+    protected void drawLineFromSquare (BoardPosVec pos, Direction dir) {
+        Direction lineDir = Direction.NORTH;
 
-        if (dir == Util.Direction.EAST || dir == Util.Direction.SOUTH) {
+        if (dir == Direction.EAST || dir == Direction.SOUTH) {
             pos.r++;
             pos.c++;
         }
 
         switch (dir) {
             case NORTH:
-                lineDir = Util.Direction.EAST;
+                lineDir = Direction.EAST;
                 break;
             case WEST:
-                lineDir = Util.Direction.SOUTH;
+                lineDir = Direction.SOUTH;
                 break;
             case EAST:
-                lineDir = Util.Direction.NORTH;
+                lineDir = Direction.NORTH;
                 break;
             case SOUTH:
-                lineDir = Util.Direction.WEST;
+                lineDir = Direction.WEST;
                 break;
 
         }
@@ -54,7 +82,7 @@ public class Drawer {
     }
 
 
-    protected void drawLineFromPoint (BoardPosVec pos, Util.Direction dir) {
+    protected void drawLineFromPoint (BoardPosVec pos, Direction dir) {
 
 
         BoardPosVec pos2 = pos.add(dir.vector);
@@ -65,9 +93,9 @@ public class Drawer {
 
     private void drawSquarePixelwise(boolean stroke, BoardPosVec pos1) {
         if (stroke)
-            gc.strokeRect(pos1.c, pos1.r, GameGridView.getSquarePixelWidth(), GameGridView.getSquarePixelWidth());
+            gc.strokeRect(pos1.c, pos1.r, squarePixelWidth, squarePixelWidth);
         else
-            gc.fillRect(pos1.c, pos1.r, GameGridView.getSquarePixelWidth(), GameGridView.getSquarePixelWidth());
+            gc.fillRect(pos1.c, pos1.r, squarePixelWidth, squarePixelWidth);
 
     }
 

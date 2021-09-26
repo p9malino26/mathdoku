@@ -1,4 +1,4 @@
-package com.patryk.mathdoku;
+package com.patryk.mathdoku.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,14 +1,11 @@
-package com.patryk.mathdoku;
+package com.patryk.mathdoku.gui.drawers;
 
-import com.patryk.mathdoku.drawers.Drawer;
-import com.patryk.mathdoku.global.BoardPosVec;
-import javafx.scene.canvas.GraphicsContext;
+import com.patryk.mathdoku.cageData.Cage;
+import com.patryk.mathdoku.util.BoardPosVec;
 import javafx.scene.paint.Color;
 
 public class ErrorsHighlighter extends Drawer {
-    public ErrorsHighlighter(GraphicsContext gc) {
-        super(gc);
-    }
+
 
     public void drawErroneousCage(Cage cage) {
         gc.setFill(Color.RED);
@@ -23,10 +20,10 @@ public class ErrorsHighlighter extends Drawer {
         BoardPosVec size  ;
         if (isRow) {
             start   = new BoardPosVec(index, 0);
-            size     = new BoardPosVec(1, GameContext.getBoardWidth());
+            size     = new BoardPosVec(1, boardWidth);
         } else { //col
             start   = new BoardPosVec(0, index);
-            size     = new BoardPosVec(GameContext.getBoardWidth(), 1);
+            size     = new BoardPosVec(boardWidth, 1);
         }
         gc.setFill(Color.ORANGE);
 

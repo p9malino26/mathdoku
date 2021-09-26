@@ -1,10 +1,10 @@
 package com.patryk.mathdoku.errorChecking;
 
-import com.patryk.mathdoku.CageData;
+import com.patryk.mathdoku.cageData.CageData;
 import com.patryk.mathdoku.UserData;
-import com.patryk.mathdoku.global.BoardPosVec;
+import com.patryk.mathdoku.util.BoardPosVec;
 
-public class GridErrorChecker {
+public class UserErrorChecker {
       /*
     every time a change to a cell is made, a check is made whether the row, column and
      cage are valid.
@@ -44,14 +44,13 @@ public class GridErrorChecker {
     CageData cageData;
 
 
-    public GridErrorChecker (int boardWidth, UserData userData, CageData cageData) {
+    public UserErrorChecker(int boardWidth, UserData userData, CageData cageData) {
         this.boardWidth = boardWidth;
         this.userData = userData;
         this.cageData = cageData;
 
         rcChecker = new RCChecker(boardWidth);
-        cageChecker = new CageChecker(cageData);
-        //todo call is not needed when grid is initially blank
+        cageChecker = new CageChecker(userData, cageData);
         recalculate();
     }
 
@@ -65,11 +64,6 @@ public class GridErrorChecker {
 
 
     private void onSingleCellChange(UserData.ChangeListener.SingleCellChange changeData) {
-        BoardPosVec cellChanged = changeData.getCellChanged();
-        //cage checker doesn't care whether it's added or not
-        // todo cageChecker.onDigitChanged(cellChanged);
-        //if value entered
-        //todo what if a digit is neither added or removed??
 
         /*
         bef     after   call entered    call removed
@@ -106,7 +100,6 @@ public class GridErrorChecker {
         } else {
             rcChecker.reset();
             cageChecker.reset();
-            //todo cageChecker.reset();
         }
     }
 
@@ -116,7 +109,6 @@ public class GridErrorChecker {
      * @param changeData
      */
     public void onGridChange(UserData.ChangeListener.ChangeData changeData) {
-        System.out.println("Start of change.");
         //rcchecker updates itself at every change, while cageChecker only recalculates when the grid is full.
         //however, everything can be recalculated when the check button is pressed
         if (changeData instanceof UserData.ChangeListener.SingleCellChange) {
@@ -124,7 +116,6 @@ public class GridErrorChecker {
         } else if (changeData instanceof UserData.ChangeListener.MultipleCellChange) {
             onMultipleCellChange((UserData.ChangeListener.MultipleCellChange) changeData);
         }
-        System.out.println("End of change.");
 
     }
 
@@ -138,25 +129,6 @@ public class GridErrorChecker {
         rcChecker.reset();
     }
 
-
-
-    /* TODO private boolean cagesValid() {
-        for (CageInfo cage: cageInfos) {
-            if (cage.isRecordOutOfDate()) {
-                cage.reCalculate();
-            }
-
-            if (!cage.isCageCorrect()) {
-                return false;
-            }
-        }
-
-        return true;
-    }*/
-
-    /* TODO public boolean isWon() {
-        return rowsCompleteAndCorrect() && cagesValid();
-    }*/
 
     public void showErrors(ErrorShower errorShower) {
         //rows and columns

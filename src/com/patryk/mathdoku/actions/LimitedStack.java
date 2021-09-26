@@ -1,4 +1,4 @@
-package com.patryk.mathdoku;
+package com.patryk.mathdoku.actions;
 
 public class LimitedStack<T> implements LimitedStackBase<T> {
     final int maxSize;
@@ -39,10 +39,6 @@ public class LimitedStack<T> implements LimitedStackBase<T> {
         return a;
     }
 
-    /*@Override
-    public void push(Action item, int pos) {
-
-    }*/
 
     @Override
     public T pop() {
@@ -89,8 +85,6 @@ public class LimitedStack<T> implements LimitedStackBase<T> {
         }
         sb.append(']');
         return sb.toString();
-
-
     }
 
 }

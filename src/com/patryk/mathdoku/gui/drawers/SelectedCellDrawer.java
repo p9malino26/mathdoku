@@ -1,13 +1,12 @@
-package com.patryk.mathdoku.drawers;
+package com.patryk.mathdoku.gui.drawers;
 
-import com.patryk.mathdoku.global.BoardPosVec;
-import javafx.scene.canvas.GraphicsContext;
+import com.patryk.mathdoku.util.BoardPosVec;
 import javafx.scene.paint.Color;
 
 public class SelectedCellDrawer extends  Drawer{
 
-    public SelectedCellDrawer(GraphicsContext gc) {
-        super(gc);
+    public SelectedCellDrawer() {
+        super();
     }
 
     public void draw(BoardPosVec markedCell) {

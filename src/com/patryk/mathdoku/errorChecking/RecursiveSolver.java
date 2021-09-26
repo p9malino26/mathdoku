@@ -1,4 +1,6 @@
-package com.patryk.mathdoku;
+package com.patryk.mathdoku.errorChecking;
+
+import com.patryk.mathdoku.cageData.Cage;
 
 public class RecursiveSolver {
 
@@ -39,8 +41,6 @@ public class RecursiveSolver {
         this.permute = (operator == Cage.Operator.SUBTRACT || operator == Cage.Operator.DIVIDE);
     }
 
-    //!!!not thread safe!!!
-    //TODO make cagelist a member!
     public static boolean testSign(int[] cageList, int target, Cage.Operator operator) {
         return new RecursiveSolver(target, operator).f(0, cageList, 0, 0);
     }

@@ -1,27 +1,21 @@
 package com.patryk.mathdoku;
 
-import com.patryk.mathdoku.actions.Action;
-import com.patryk.mathdoku.actions.CellValueChangeAction;
-import com.patryk.mathdoku.actions.ClearAction;
-//todo
-//import com.patryk.mathdoku.errorChecking.GridErrorChecker;
-import com.patryk.mathdoku.errorChecking.GridErrorChecker;
-import com.patryk.mathdoku.global.BoardPosVec;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.patryk.mathdoku.actions.*;
+import com.patryk.mathdoku.cageData.CageData;
+import com.patryk.mathdoku.cageData.DataFormatException;
+import com.patryk.mathdoku.errorChecking.UserErrorChecker;
+import com.patryk.mathdoku.util.BoardPosVec;
 
 /**
  * Represents one status of the playing of the game e.g. the cage data, what the user has entered
  */
 public class GameContext {
 
-    private static GameContext activeContext;
+    private int boardWidth;
 
-    CageData cageData;
-    UserData userData;
-    GridErrorChecker gridErrorChecker;
+    private CageData cageData;
+    private UserData userData;
+    private UserErrorChecker userErrorChecker;
 
     StackActionRecorder<Action> actionRecorder;
 
@@ -29,38 +23,28 @@ public class GameContext {
         return actionRecorder;
     }
 
-    private int boardWidth;
-
-    public static GameContext me() {
-        return activeContext;
-    }
-
-    //todo
 
     UserData.ChangeListener updateErrorState = (UserData.ChangeListener.ChangeData changeData) -> {
-        gridErrorChecker.onGridChange(changeData);
-        if (userData.isFull() && gridErrorChecker.noErrors()) {
-            System.out.println("Game won");
-            userData.saveToFile("winning.txt");
-        }
+        userErrorChecker.onGridChange(changeData);
     };
 
 
-
-    //TODO improve this exception choice
-    public GameContext(String cageDataFilePath, int boardWidth) throws IOException {
-        this.boardWidth = boardWidth;
+    public GameContext(String data) throws DataFormatException {
+        cageData = new CageData(data);
+        this.boardWidth = cageData.getWidth();
         BoardPosVec.setBoardWidth(boardWidth);
-        cageData = new CageData(cageDataFilePath, boardWidth);
+        Action.setGameContext(this);
         userData = new UserData(boardWidth);
-        actionRecorder = new StackActionRecorder(5);
+        actionRecorder = new StackActionRecorder<>(5);
         //userData.fill();
 
-        gridErrorChecker = new GridErrorChecker(boardWidth, userData, cageData);
+        userErrorChecker = new UserErrorChecker(boardWidth, userData, cageData);
 
         userData.addChangeListener(updateErrorState);
 
     }
+
+
 
 
     public CageData getCageData() {
@@ -89,12 +73,8 @@ public class GameContext {
 
     }
 
-    public void setActive() {
-        GameContext.activeContext = this;
-    }
-
-    public static int getBoardWidth() {
-        return GameContext.me().boardWidth;
+    public int getBoardWidth() {
+        return boardWidth;
     }
 
     public void undo() {
@@ -106,7 +86,19 @@ public class GameContext {
         UndoRedoButtonManager.me().onRedoButtonPressed();
     }
 
-    public GridErrorChecker getErrorChecker() {
-        return gridErrorChecker;
+
+    public UserErrorChecker getErrorChecker() {
+        return userErrorChecker;
+    }
+
+
+    public boolean isWon() {
+        if (userData.isFull()) {
+            if (userErrorChecker.noErrors()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

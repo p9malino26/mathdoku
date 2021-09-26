@@ -1,6 +1,6 @@
 package com.patryk.mathdoku;
 
-import com.patryk.mathdoku.global.BoardPosVec;
+import com.patryk.mathdoku.util.BoardPosVec;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -61,9 +61,6 @@ public class UserData {
     int fullSize;
     int populationCount = 0;
     List<ChangeListener> changeListenerList = new LinkedList<>();
-    static UserData instance; // instance of current, active userdata
-
-    public static UserData me() {return instance; }
 
     private UserData() {};
 
@@ -71,7 +68,6 @@ public class UserData {
         boardWidth = width;
         fullSize = width * width;
         data = new int[fullSize];
-        instance = this;
 
         clear();
     }
@@ -82,7 +78,6 @@ public class UserData {
      */
     public static UserData move(UserData other) {
         UserData newData = new UserData();
-        instance = newData;
         newData.boardWidth = other.boardWidth;
         //boardwidths are the same
 
@@ -99,7 +94,16 @@ public class UserData {
     public void copy(UserData other) {
         //this.boardWidth = other.boardWidth;
         this.data = Arrays.copyOf(other.data, boardWidth * boardWidth);
+        this.populationCount = other.populationCount;
         notifyListener(new ChangeListener.MultipleCellChange(false));
+    }
+
+    public int getPopulationCount() {
+        return populationCount;
+    }
+
+    public boolean isEmpty() {
+        return populationCount == 0;
     }
 
     public void addChangeListener(ChangeListener listener) {
@@ -107,7 +111,6 @@ public class UserData {
     }
 
     public void notifyListener(ChangeListener.ChangeData changeData) {
-        //TODO fix
         for (ChangeListener changeListener: changeListenerList){
             changeListener.onDataChanged(changeData);
         }
@@ -123,12 +126,14 @@ public class UserData {
 
         if (oldValue != value) {
             data[cell.toIndex()] = value;
-            notifyListener(new ChangeListener.SingleCellChange(cell, oldValue, value));
             if (oldValue == 0)
                 populationCount++;
-            else if (value == 0) {
+
+            if (value == 0) {
                 populationCount--;
             }
+            notifyListener(new ChangeListener.SingleCellChange(cell, oldValue, value));
+
         }
     }
 
@@ -144,6 +149,8 @@ public class UserData {
 
     public void clear() {
         Arrays.fill(data, 0);
+        populationCount = 0;
+        notifyListener(new ChangeListener.MultipleCellChange(true));
     }
 
     @Override
@@ -185,7 +192,7 @@ public class UserData {
             bw.close();
 
         } catch (IOException e) {
-            System.out.println("some serious shit has happened!");
+            //this is very rare
         }
 
     }

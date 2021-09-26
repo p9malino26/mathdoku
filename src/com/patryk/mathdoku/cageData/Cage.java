@@ -1,4 +1,4 @@
-package com.patryk.mathdoku;
+package com.patryk.mathdoku.cageData;
 
 import java.util.List;
 
@@ -17,8 +17,6 @@ public class Cage {
 
     public int getTarget() {return target; }
 
-    public char getSign() {return operator.sign; }
-
     public Cage.Operator getOperator() {
         return operator;
     }
@@ -35,7 +33,10 @@ public class Cage {
 
     @Override
     public String toString() {
-        return Integer.toString(target) + operator.sign;
+        String s = Integer.toString(target);
+        if (getCellCount() > 1)
+            s+=this.operator.sign;
+        return s;
     }
 
     public enum Operator {

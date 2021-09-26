@@ -1,7 +1,7 @@
 package com.patryk.mathdoku.errorChecking;
 
 import java.util.Arrays;
-import com.patryk.mathdoku.global.BoardPosVec;
+import com.patryk.mathdoku.util.BoardPosVec;
 import com.patryk.mathdoku.UserData;
 
 public class RCChecker {
@@ -19,17 +19,16 @@ public class RCChecker {
     public void onDigitEntered(BoardPosVec cellChanged, int digit) {
         rowInfos.getList()[cellChanged.r].onDigitEntered(digit);
         colInfos.getList()[cellChanged.c].onDigitEntered(digit);
-        System.out.printf("Digit %d entered at %s.\nData for row is: %s\nData for column is: %s\n\n", digit, cellChanged, rowInfos.getList()[cellChanged.r], colInfos.getList()[cellChanged.c]);
+        //System.out.printf("Digit %d entered at %s.\nData for row is: %s\nData for column is: %s\n\n", digit, cellChanged, rowInfos.getList()[cellChanged.r], colInfos.getList()[cellChanged.c]);
     }
 
     public void onDigitRemoved(BoardPosVec cellChanged, int digit) {
         rowInfos.getList()[cellChanged.r].onDigitRemoved(digit);
         colInfos.getList()[cellChanged.c].onDigitRemoved(digit);
-        System.out.printf("Digit %d removed at %s.\nData for row is: %s\nData for column is: %s\n\n", digit, cellChanged, rowInfos.getList()[cellChanged.r], colInfos.getList()[cellChanged.c]);
+        //System.out.printf("Digit %d removed at %s.\nData for row is: %s\nData for column is: %s\n\n", digit, cellChanged, rowInfos.getList()[cellChanged.r], colInfos.getList()[cellChanged.c]);
     }
 
     public void recalculate(UserData userData) {
-        //TODO for every cell in the data, call the corresponding on value changed/removed
         reset();
         for (int r = 0; r < boardWidth; r++) {
             for (int c = 0; c < boardWidth; c++) {
@@ -119,7 +118,6 @@ class RCInfo {
         digitCount++;
     }
 
-    //TODO call it somewhere!
     public void onDigitRemoved(int digit) {
         int finalCount = --digitCounts[digit - 1];
         if (finalCount == 0 ) {
