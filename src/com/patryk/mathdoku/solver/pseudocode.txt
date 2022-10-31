@@ -1,0 +1,42 @@
+add:
+proc rec(cell of cage, sum#remaining):
+    if on last cell and remaining not in forbidden digits:
+        write remaining into cell
+        return true
+
+    upper limit = remaining -  number of blanks in cage + 1
+    for n in reverse(range(1, min(upper limit, N)):
+        if n not in forbidden digits:
+            write N into cell
+            if recurse(next cell in the cage) is true:
+                return true
+
+    blank your spot
+    return false
+
+multiply:
+proc rec(cell index, remaining):
+    if on last cell and remaining not in forbidden digits:
+        write remaining into cell
+        return true
+
+    for every factor n of remaining less than limit:
+        if n not in forbidden digits:
+            write N into cell
+            if recurse(cell index + 1, remaining / factor) is true:
+                return true
+
+    blank your spot
+    return false
+
+generic:
+proc rec:
+
+    for every number up to limit that is not in forbidden digits:
+        write N into cell
+        if on last cell:
+            record solution
+            return true
+        if recurse(cell index + 1) return true
+
+    return false

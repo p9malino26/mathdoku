@@ -26,7 +26,7 @@ public class GameUI {
     private static final int MAX_WIDTH = 8;
     private Scene scene;
     GameContext gameContext;
-    private boolean wonBefore = false;
+    public boolean wonBefore = false;
 
     public boolean hasWonBefore() {
         return wonBefore;
@@ -38,8 +38,10 @@ public class GameUI {
     public Button redoButton = new Button("Redo");
     public Button clearButton = new Button("Clear");
     public Button checkButton = new Button("Check");
+    public Button solveButton = new Button("Solve");
     public Button fileLoadButton = new Button("Load game from file");
     public Button textLoadButton = new Button("Load game from text input");
+    public Button ranGameButton = new Button("Random game");
 
     public ComboBox<GameGridView.FontSize> fontSizeComboBox;
     GameGridView.FontSize defaultFontSize = GameGridView.FontSize.MEDIUM;
@@ -81,7 +83,7 @@ public class GameUI {
         undoRedoButtonManager = new UndoRedoButtonManager(undoButton, redoButton);
         //initialize control pane
         controlPane = new VBox();
-        controlPane.getChildren().addAll(undoButton, redoButton, clearButton, checkButton, fileLoadButton, textLoadButton);
+        controlPane.getChildren().addAll(undoButton, redoButton, clearButton, checkButton, solveButton, fileLoadButton, textLoadButton, ranGameButton);
 
         //disable clear and check buttons
         clearButton.setDisable(true);

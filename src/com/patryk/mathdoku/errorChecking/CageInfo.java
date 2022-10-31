@@ -45,7 +45,7 @@ public class CageInfo {
         populationCount++;
         if (isFull()) {
             int[] cageMemberData = getMembersOfCage();
-            isInvalid = !RecursiveSolver.testSign(cageMemberData, cage.getTarget(), cage.getOperator());
+            isInvalid = !RecursiveChecker.testSign(cageMemberData, cage.getTarget(), cage.getOperator());
         }
     }
 

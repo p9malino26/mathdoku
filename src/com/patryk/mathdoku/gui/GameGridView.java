@@ -44,7 +44,7 @@ public class GameGridView {
         }
     };
 
-    UserData.ChangeListener redrawGame = (data) -> {
+    public void redrawGame() {
         userDataDrawer.draw();
         errorHighlighter.clearCanvas();
     };
@@ -88,7 +88,7 @@ public class GameGridView {
         this.gameContext = gameContext;
         //Drawer.init(gameContext.getBoardWidth(), pixelWidth);
 
-        gameContext.getUserData().addChangeListener(redrawGame);
+        gameContext.getUserData().addChangeListener(data -> redrawGame());
 
         //link cage drawer to canvas and draw the cages
 

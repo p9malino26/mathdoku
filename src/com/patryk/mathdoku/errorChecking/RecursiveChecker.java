@@ -1,8 +1,11 @@
 package com.patryk.mathdoku.errorChecking;
 
+import com.patryk.mathdoku.ArrayConversions;
 import com.patryk.mathdoku.cageData.Cage;
 
-public class RecursiveSolver {
+import java.util.List;
+
+public class RecursiveChecker {
 
 
 
@@ -35,14 +38,18 @@ public class RecursiveSolver {
         return false;
     }
 
-    private RecursiveSolver(int target, Cage.Operator operator) {
+    private RecursiveChecker(int target, Cage.Operator operator) {
         this.target = target;
         this.operator = operator;
         this.permute = (operator == Cage.Operator.SUBTRACT || operator == Cage.Operator.DIVIDE);
     }
 
+
+    public static boolean testSign(List<Integer> cageList, int target, Cage.Operator operator) {
+        return testSign(ArrayConversions.toNative(cageList.toArray()), target, operator);
+    }
     public static boolean testSign(int[] cageList, int target, Cage.Operator operator) {
-        return new RecursiveSolver(target, operator).f(0, cageList, 0, 0);
+        return new RecursiveChecker(target, operator).f(0, cageList, 0, 0);
     }
 
 }

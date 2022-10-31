@@ -90,7 +90,7 @@ public class CageDrawer extends Drawer{
 
 
         for (Cage c: data.getCages()) {
-            drawCageText(new BoardPosVec(c.getMarkedCell()), c.toString());
+            drawCageText(new BoardPosVec(c.getMemberCells().get(0)), c.toString());
         }
     }
 

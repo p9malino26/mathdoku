@@ -5,9 +5,7 @@ import com.patryk.mathdoku.util.BoardPosVec;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class UserData {
     public interface ChangeListener {
@@ -98,6 +96,10 @@ public class UserData {
         notifyListener(new ChangeListener.MultipleCellChange(false));
     }
 
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
     public int getPopulationCount() {
         return populationCount;
     }
@@ -122,17 +124,20 @@ public class UserData {
 
 
     public void setValueAtCell(BoardPosVec cell, int value) {
-        int oldValue = data[cell.toIndex()];
+        setValueAtCell(cell.toIndex(), value);
+    }
+    public void setValueAtCell(int index, int value) {
+        int oldValue = data[index];
 
         if (oldValue != value) {
-            data[cell.toIndex()] = value;
+            data[index] = value;
             if (oldValue == 0)
                 populationCount++;
 
             if (value == 0) {
                 populationCount--;
             }
-            notifyListener(new ChangeListener.SingleCellChange(cell, oldValue, value));
+            notifyListener(new ChangeListener.SingleCellChange(new BoardPosVec(index), oldValue, value));
 
         }
     }
@@ -165,6 +170,28 @@ public class UserData {
             builder.append('\n');
         }
         return builder.toString();
+    }
+
+    public Set<Integer> getAllowedDigits(int index) {
+        BoardPosVec posVec = new BoardPosVec(index);
+        int r = posVec.r;
+        int c = posVec.c;
+
+        Set<Integer> allDigits = new HashSet<>();
+        for(int i = 1; i <= boardWidth; i++) {
+            allDigits.add(i);
+        }
+
+
+        //remove row digits
+        for (int vcol = 0; vcol < c; vcol++) {
+            allDigits.remove(Integer.valueOf(getValueAtCell(new BoardPosVec(r, vcol))));
+        }
+        //remove column digits
+        for (int vrow = 0; vrow < r; vrow++) {
+            allDigits.remove(Integer.valueOf(getValueAtCell(new BoardPosVec(vrow, c))));
+        }
+        return allDigits;
     }
 
     public void fill() {

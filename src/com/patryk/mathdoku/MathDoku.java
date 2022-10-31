@@ -1,8 +1,14 @@
 package com.patryk.mathdoku;
 
+import com.patryk.mathdoku.cageData.Cage;
+import com.patryk.mathdoku.cageData.CageData;
 import com.patryk.mathdoku.cageData.DataFormatException;
+import com.patryk.mathdoku.solver.CageSolver;
 import com.patryk.mathdoku.gui.GameUI;
 import com.patryk.mathdoku.gui.ManualGameInputDialog;
+import com.patryk.mathdoku.gui.RandGameDialog;
+import com.patryk.mathdoku.randomGame.RandomGame;
+import com.patryk.mathdoku.solver.Solver;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -16,7 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class MathDoku extends Application {
     GameUI gameUI;
@@ -64,6 +72,29 @@ public class MathDoku extends Application {
 
 
     };
+
+    EventHandler<ActionEvent> onRanGameButtonPressed = (event) -> {
+        RandGameDialog dialog = new RandGameDialog();
+
+        Optional<RandGameDialog.RanGameInfo> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            int seed;
+            seed = result.get().seed;
+            int size = result.get().width;
+
+            CageData cageData = RandomGame.randomGame(seed, size);
+            setGameContext(new GameContext(cageData));
+        }
+
+
+    };
+
+    private void onSolveButtonPressed(ActionEvent event) {
+        gameContext.userData.clear();
+        gameUI.wonBefore = true;
+        Solver.solve(gameContext.getUserData(), gameContext.getCageData());
+    }
 
 
 
@@ -124,6 +155,8 @@ public class MathDoku extends Application {
         gameUI.checkButton.addEventHandler(ActionEvent.ANY,(event) ->  gameUI.gameGridView.showErrors());
         gameUI.fileLoadButton.addEventHandler(ActionEvent.ANY, onFileLoadButtonPressed);
         gameUI.textLoadButton.addEventHandler(ActionEvent.ANY, onManualInputButtonPressed);
+        gameUI.ranGameButton.addEventHandler(ActionEvent.ANY, onRanGameButtonPressed);
+        gameUI.solveButton.addEventHandler(ActionEvent.ANY, this::onSolveButtonPressed);
 
         gameUI.setNumberButtonCallback((digit) -> gameUI.gameGridView.getInputHandler().injectNumberKey(digit));
 
@@ -136,13 +169,15 @@ public class MathDoku extends Application {
     }
 
     public boolean wantsToExit() {
-        if (shouldDisplayExitDialog()) {
-            //show confirmation dialog
-
-
-            return gameUI.showConfirmExitDialog();
-        }
+        //todo debug
         return true;
+//        if (shouldDisplayExitDialog()) {
+//            //show confirmation dialog
+//
+//
+//            return gameUI.showConfirmExitDialog();
+//        }
+//        return true;
     }
 
     public boolean shouldDisplayExitDialog() {

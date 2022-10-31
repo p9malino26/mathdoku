@@ -8,17 +8,33 @@ import java.util.*;
 
 public class CageData {
     int width;
-
     Cell[] data;
+
+    public List<Cage> getCageList() {
+        return cageList;
+    }
+
     List<Cage> cageList = new ArrayList<Cage>();
     int cageCount;
 
+    public CageData(int width) {
+        this.width = width;
+        data = new Cell[width * width];
+        for (int i = 0; i < width * width; i++) {
+            data[i] = new Cell(-1);
+        }
+        this.cageList = new ArrayList<>();
+
+    }
     public CageData(String data) throws DataFormatException{
         parseData(data);
     }
 
-
+    public Cell[] getData() {
+        return data;
+    }
     public List<Cage> getCages() {return cageList; }
+
 
     public boolean cellConnectsTo(BoardPosVec pos, Direction direction) {
 
@@ -45,7 +61,7 @@ public class CageData {
         if (size > 81)
             throw new DataFormatException(-1, "Too many cells! Max is 81.");
         initData();
-        cageCount = parser.parseData(new Scanner(rawData), data, cageList);
+        parser.parseData(new Scanner(rawData), data, cageList);
 
     }
 
@@ -71,17 +87,11 @@ public class CageData {
     }
 
     public int getCageCount() {
-        return cageCount;
+        return cageList.size();
     }
 
-}
 
-class Cell {
-    private int cageID;
-
-    public Cell (int cageID) {
-        this.cageID = cageID;
+    public void setCageList(List<Cage> cageList) {
+        this.cageList = cageList;
     }
-
-    public int getCageId() {return cageID; }
 }

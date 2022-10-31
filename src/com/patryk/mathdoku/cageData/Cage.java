@@ -1,12 +1,15 @@
 package com.patryk.mathdoku.cageData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cage {
     int target;
-    Cage.Operator operator;
-    int markedCell;
-    private final List<Integer> memberCells;
+    Cage.Operator operator = Operator.ADD;
+    int markedCell = 0;
+    private List<Integer> memberCells = new ArrayList<>();
+
+    public Cage() {}
 
     public Cage(int target, Cage.Operator operator, int markedCell, List<Integer> memberCells) {
         this.target = target;
@@ -37,6 +40,18 @@ public class Cage {
         if (getCellCount() > 1)
             s+=this.operator.sign;
         return s;
+    }
+
+    public void setTarget(int target) {
+        this.target = target;
+    }
+
+    public void setOperator(Operator operator) {
+        this.operator = operator;
+    }
+
+    public void setMemberCells(List<Integer> memberCells) {
+        this.memberCells = memberCells;
     }
 
     public enum Operator {
@@ -72,7 +87,7 @@ public class Cage {
                 case MULTIPLY:
                     return operand1 * operand2;
                 case DIVIDE:
-                    return Math.floorDiv(operand1, operand2);
+                    return Math.max(1, Math.floorDiv(operand1, operand2));
                 default:
                     return -1;
             }

@@ -1,5 +1,8 @@
 package com.patryk.mathdoku.util;
 
+import java.util.*;
+import java.util.function.Consumer;
+
 public class BoardPosVec {
     //private static GameContext gameContext = GameContext.getInstance();
     //public static int width = GameContext.getBoardWidth();
@@ -30,6 +33,10 @@ public class BoardPosVec {
     public BoardPosVec(int index) {
         r = Math.floorDiv(index, boardWidth);
         c = index - r * boardWidth;
+    }
+
+    public static int getBoardWidth() {
+        return boardWidth;
     }
 
     public BoardPosVec add(BoardPosVec other) {
@@ -64,6 +71,11 @@ public class BoardPosVec {
                 c >= 0 && c < boardWidth;
     }
 
+    public static boolean isValid(int r, int c) {
+        return r >= 0 && r < boardWidth &&
+                c >= 0 && c < boardWidth;
+    }
+
     public int toIndex() {
         return boardWidth * r + c;
     }
@@ -77,9 +89,43 @@ public class BoardPosVec {
         return new BoardPosVec(Util.pixelToBoard(this.r, boardWidth, pixelWidth), Util.pixelToBoard(this.c, boardWidth, pixelWidth));
     }
 
+    public static void forEveryCellAround(BoardPosVec pos, Random ranObj, Consumer<BoardPosVec> func) {
+        BoardPosVec[] around = {
+                pos.add(new BoardPosVec(0,1)),
+                pos.add(new BoardPosVec(0,-1)),
+                pos.add(new BoardPosVec(1,0)),
+                pos.add(new BoardPosVec(-1,0)),
+        };
+
+        List<BoardPosVec> aroundObj = new ArrayList(List.of(around));
+        if (ranObj != null) Collections.shuffle(aroundObj, ranObj);
+
+
+        for (var vec: aroundObj) {
+            if (!vec.isValid()) continue;
+            func.accept(vec);
+        }
+    }
+
+    public static void forEveryCellAround(BoardPosVec pos, Consumer<BoardPosVec> func) {
+        forEveryCellAround(pos,null, func);
+    }
 
     @Override
     public String toString() {
         return String.format("(%d, %d)", r, c);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoardPosVec that = (BoardPosVec) o;
+        return r == that.r && c == that.c;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(r, c);
     }
 }
